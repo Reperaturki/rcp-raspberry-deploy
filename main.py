@@ -1,0 +1,3 @@
+import  deploy
+
+deploy.deploy()
