@@ -35,8 +35,12 @@ def deploy():
             for required_file in cfg_handler.required_files:
                 connection.put(os.path.join(cfg_handler.project_directory, required_file), cfg_handler.destination_directory)
 
-            for required_directory in cfg_handler.required_directories:
-                put_dir(connection, os.path.join(cfg_handler.project_directory, required_directory), cfg_handler.destination_directory)
+            if cfg_handler.required_directories and cfg_handler.required_directories[0] != "":
+                for required_directory in cfg_handler.required_directories:
+                    put_dir(connection, os.path.join(cfg_handler.project_directory, required_directory),
+                            cfg_handler.destination_directory)
+            else:
+                print("No directories to deploy - skipping directory deployment")
 
             connection.run(f"sudo systemctl restart {cfg_handler.service_to_restart}")
             connection.close()
