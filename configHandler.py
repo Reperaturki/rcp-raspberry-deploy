@@ -74,6 +74,11 @@ class ConfigHandler:
                 print("[ERROR] JSON file contains no data.")
                 return False
 
+            if not isinstance(config_data, dict):
+                print("[ERROR] JSON must be an object (start with curly braces {}).")
+                print(f"Found type: {type(config_data).__name__}")
+                return False
+
             return True
 
         except json.JSONDecodeError:
