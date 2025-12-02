@@ -1,6 +1,7 @@
 import os
 import sys
 import tkinter as tk
+import json
 from tkinter import filedialog
 from dotenv import load_dotenv
 
@@ -25,14 +26,15 @@ class ConfigHandler:
         self.required_directories = require_env('REQUIRED_DIRECTORIES').split(',')
 
         self.destination_directory = require_env('DESTINATION_DIRECTORY')
-
         self.project_directory = ""
+
+        self.local_config_path = ""
+
 
     def ask_project_path(self):
         root = tk.Tk()
         root.withdraw()
         self.project_directory = filedialog.askdirectory()
-
     def check_project_directory(self) -> bool:
         self.ask_project_path()
 
@@ -48,3 +50,35 @@ class ConfigHandler:
                 return False
 
         return True
+
+    def ask_config_path(self):
+        root = tk.Tk()
+        root.withdraw()
+        self.local_config_path = filedialog.askopenfilename()
+    def check_config(self) -> bool:
+        self.ask_config_path()
+
+        if not self.local_config_path.lower().endswith('.json'):
+            print("[ERROR] Selected file is not a JSON file.")
+            return False
+
+        if os.path.getsize(self.local_config_path) == 0:
+            print("[ERROR] Selected file is empty.")
+            return False
+
+        try:
+            with open(self.local_config_path, 'r', encoding='utf-8') as file:
+                config_data = json.load(file)
+
+            if not config_data:
+                print("[ERROR] JSON file contains no data.")
+                return False
+
+            return True
+
+        except json.JSONDecodeError:
+            print("[ERROR] Selected file is not valid JSON.")
+            return False
+        except Exception as e:
+            print(f"[ERROR] Unexpected error occurred: {e}")
+            return False
