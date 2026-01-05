@@ -84,6 +84,9 @@ def modify_reader_config():
             os.remove(local_temp_path)
             os.remove(merged_temp_path)
 
+            connection.run(f"sudo systemctl restart {cfg_handler.service_to_restart}")
+            connection.close()
+
             print(f"Config successfully updated for host: {host}")
 
         except Exception as e:
