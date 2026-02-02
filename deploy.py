@@ -41,6 +41,8 @@ def deploy():
             else:
                 print("No directories to deploy - skipping directory deployment")
 
+
+            connection.run(f"rm -r {cfg_handler.destination_directory}/log")
             connection.run(f"sudo systemctl restart {cfg_handler.service_to_restart}")
             connection.close()
 
