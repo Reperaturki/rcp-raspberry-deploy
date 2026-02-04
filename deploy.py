@@ -44,6 +44,7 @@ def deploy():
 
             connection.run(f"rm -r {cfg_handler.destination_directory}/log")
             connection.run(f"sudo systemctl restart {cfg_handler.service_to_restart}")
+            connection.run(f"sudo reboot")
             connection.close()
 
             print("Deploy finished successfully for the host: " + host)
